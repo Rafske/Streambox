@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <h2>Stream Page</h2>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form action="{{ url_for('stream') }}" method="POST">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text" id="inputGroup-sizing-lg">Streamkey</span>
+                    <input type="text" class="form-control" aria-describedby="inputGroup-sizing-lg button-addon" name="streamkey">
+                    <input class="btn btn-outline-secondary" type="submit" id="button-addon" name="keyconfirm" value="Submit"></input>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <video id="video" width=100% height= auto controls></video>
+            <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+            <script>
+                var video = document.getElementById("video");
+                var videoSrc = "http://localhost:8080/hls/{{ key }}.m3u8";
+                if (Hls.isSupported()) {
+                  var hls = new Hls();
+                  hls.loadSource(videoSrc);
+                  hls.attachMedia(video);
+                }
+                else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+                  video.src = videoSrc;
+                }
+              </script>
+        </div>
+        <div class="col-md-4">
+            insert chat here
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+
+  flask:
+    container_name: flask
+    restart: always
+    build: ./flask
+    command: gunicorn --bind 0.0.0.0:8000 wsgi:app
+    volumes:
+      - ./flask/:/flask
+    networks:
+      streamnetwork:
+        aliases:
+          - flask-app      
+    depends_on:
+      - db
+
+  nginx:
+    container_name: nginx
+    restart: always
+    build: ./nginx
+    volumes:
+      - ./nginx:/nginx
+    ports:
+      - "80:80"
+    networks:
+      - streamnetwork
+    depends_on:
+      - flask
+    
+  db:
+    image: mysql:5.7
+    container_name: database
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d/:ro
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  rtmp:
+    container_name: rtmp
+    build: ./rtmp
+    volumes:
+      - ./rtmp/stream:/tmp/hls
+    ports:
+      - "1935:1935"
+      - "8080:8080"
+      
+
+networks:
+  streamnetwork:
