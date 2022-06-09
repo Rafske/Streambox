@@ -9,9 +9,8 @@ app.secret_key = 'group12'
 
 app.config['MYSQL_HOST'] = 'db'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'streambox'
-app.config['MYSQL_PORT'] = '3306'
 
 mysql = MySQL(app)
 
@@ -36,7 +35,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             session['username'] = account['username']
-            return redirect(url_for('home'))
+            return redirect(url_for('index'))
         else:
             msg = 'Incorrect username/password!'
     
@@ -79,12 +78,6 @@ def register():
 
     return render_template('register.html', msg=msg)
 
-@app.route('/home')
-def home():
-    if 'loggedin' in session:
-        return render_template('home.html', username=session['username'])
-    return redirect(url_for('login'))
-
 @app.route('/profile')
 def profile():
     if 'loggedin' in session:
@@ -102,7 +95,15 @@ def stream():
         
     return render_template('stream.html', key=streamkey)
 
+@app.route('/howto')
+def howto():
+   
+   return render_template('howto.html')
 
+@app.route('/about')
+def about():
+   
+   return render_template('about.html')
 
 if __name__ == '__main__':
         app.run(host='0.0.0.0')

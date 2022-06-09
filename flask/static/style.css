@@ -67,3 +67,7 @@
     transition: background-color 0.2s;
 }
 
+.footer{
+    position: absolute;
+    bottom: 0;
+}
